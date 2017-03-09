@@ -21,8 +21,8 @@ from subprocess import Popen, PIPE, STDOUT
 import tempfile
 import os
 
-from androguard.core.androconf import rrmdir
-from androguard.decompiler.dad import decompile
+from agst3.androguard.core.androconf import rrmdir
+from agst3.androguard.decompiler.dad import decompile
 
 PYGMENTS = True
 try:
@@ -99,7 +99,7 @@ class DecompilerDex2Jad :
         return self.classes[class_name]
 
     def display_source(self, method):
-        print self.get_source_method(method)
+        print(self.get_source_method(method))
 
     def get_all(self, class_name) :
         if class_name not in self.classes :
@@ -113,7 +113,7 @@ class DecompilerDex2Jad :
         return self.classes[class_name]
 
     def display_all(self, _class) :
-        print self.get_all( _class.get_name() )
+        print(self.get_all( _class.get_name() ))
 
 class DecompilerDed :
     def __init__(self, vm, path="./decompiler/ded/", bin_ded = "ded.sh", tmp_dir="/tmp/") :
@@ -174,7 +174,7 @@ class DecompilerDed :
         return result
 
     def display_source(self, method) :
-        print self.get_source_method(method)
+        print(self.get_source_method(method))
 
     def get_all(self, class_name) :
         if class_name not in self.classes :
@@ -186,7 +186,7 @@ class DecompilerDed :
         return result
     
     def display_all(self, _class) :
-        print self.get_all( _class.get_name() )
+        print(self.get_all( _class.get_name() ))
 
 class MethodFilter(Filter):
     def __init__(self, **options):
@@ -273,7 +273,7 @@ class DecompilerDAD:
             lexer = get_lexer_by_name("java", stripall=True)
             formatter = TerminalFormatter()
             result = highlight(result, lexer, formatter)
-        print result
+        print(result)
 
     def get_source_class(self, _class):
         c = decompile.DvClass(_class, self.vmx)
@@ -290,7 +290,7 @@ class DecompilerDAD:
             lexer = get_lexer_by_name("java", stripall=True)
             formatter = TerminalFormatter()
             result = highlight(result, lexer, formatter)
-        print result
+        print(result)
 
     def get_all(self, class_name):
         pass

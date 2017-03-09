@@ -19,7 +19,7 @@
 import random
 
 from androconf import error
-import jvm
+from . import jvm
 
 class Automaton :
     def __init__(self, _analysis) :
@@ -45,7 +45,7 @@ class Automaton :
         l = []
         x = ""
         for i in elem :
-            if i not in jvm.MATH_JVM_OPCODES.values() :
+            if i not in list(jvm.MATH_JVM_OPCODES.values()) :
                 x += i
             else :
                 l.append( x )
@@ -77,7 +77,7 @@ class Automaton :
         l = list( self.__G.node )
 
         init = l[ random.randint(0, len(l) - 1) ]
-        while init in jvm.MATH_JVM_OPCODES.values() :
+        while init in list(jvm.MATH_JVM_OPCODES.values()) :
             init = l[ random.randint(0, len(l) - 1) ]
 
         expr.append( init )
@@ -96,8 +96,8 @@ class Automaton :
         return expr
 
     def show(self) :
-        print self.__G.node
-        print self.__G.edge
+        print(self.__G.node)
+        print(self.__G.edge)
 
         #draw_graphviz(self.__G)
         #write_dot(self.__G,'file.dot')
@@ -121,10 +121,10 @@ class JVMGenerate :
         return l
 
     def write(self, method, offset, field) :
-        print method, offset, field
+        print(method, offset, field)
         expr = self.__automaton.new( 5 )
 
-        print field.get_name(), "EXPR ->", expr
+        print(field.get_name(), "EXPR ->", expr)
 
         self._transform( expr )
 

@@ -17,10 +17,10 @@
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from androguard.decompiler.dad.basic_blocks import (build_node_from_block,
+from agst3.androguard.decompiler.dad.basic_blocks import (build_node_from_block,
                                                     StatementBlock, CondBlock,
                                                     GenInvokeRetName)
-from androguard.decompiler.dad.util import common_dom
+from agst3.androguard.decompiler.dad.util import common_dom
 
 
 logger = logging.getLogger('dad.graph')
@@ -98,7 +98,7 @@ class Graph():
         return self.loc_to_ins.get(loc)
 
     def get_node_from_loc(self, loc):
-        for (start, end), node in self.loc_to_node.iteritems():
+        for (start, end), node in self.loc_to_node.items():
             if start <= loc <= end:
                 return node
 
@@ -272,7 +272,7 @@ class Graph():
 
     def dominator_tree(self, immediate_dominators):
         dom_tree = Graph()
-        for n, idom_n in immediate_dominators.items():
+        for n, idom_n in list(immediate_dominators.items()):
             dom_tree.add_node(n)
             if idom_n:
                 dom_tree.add_edge(idom_n, n)

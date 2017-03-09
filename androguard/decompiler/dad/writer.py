@@ -17,9 +17,9 @@
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from androguard.decompiler.dad.util import get_type, ACCESS_FLAGS_METHODS
-from androguard.decompiler.dad.opcode_ins import Op
-from androguard.decompiler.dad.instruction import (Constant, ThisParam,
+from agst3.androguard.decompiler.dad.util import get_type, ACCESS_FLAGS_METHODS
+from agst3.androguard.decompiler.dad.opcode_ins import Op
+from agst3.androguard.decompiler.dad.instruction import (Constant, ThisParam,
                                                    BinaryCompExpression)
 
 

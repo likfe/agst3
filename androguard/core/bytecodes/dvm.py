@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
-from androguard.core import bytecode
-from androguard.core.androconf import CONF, debug, is_android_raw
+from agst3.androguard.core import bytecode
+from agst3.androguard.core.androconf import CONF, debug, is_android_raw
 
 import sys
 import re
@@ -297,7 +297,7 @@ def writesleb128(value) :
     end = 0
     buff = ""
 
-    if (value & (-sys.maxint - 1)) == 0 :
+    if (value & (-sys.maxsize - 1)) == 0 :
         end = 0
     else :
         end = -1
@@ -583,7 +583,7 @@ class AnnotationSetItem :
         self.annotation_off_item = []
 
         self.size = unpack("=I", buff.read( 4 ) )[0]
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.annotation_off_item.append( AnnotationOffItem(buff, cm) )
 
     def get_annotation_off_item(self) :
@@ -673,7 +673,7 @@ class AnnotationSetRefList :
         self.list = []
 
         self.size = unpack("=I", buff.read( 4 ) )[0]
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.list.append( AnnotationSetRefItem(buff, cm) )
 
     def get_list(self) :
@@ -883,15 +883,15 @@ class AnnotationsDirectoryItem :
         self.annotated_parameters_size = unpack("=I", buff.read(4))[0]
 
         self.field_annotations = []
-        for i in xrange(0, self.annotated_fields_size) :
+        for i in range(0, self.annotated_fields_size) :
             self.field_annotations.append( FieldAnnotation( buff, cm ) )
 
         self.method_annotations = []
-        for i in xrange(0, self.annotated_methods_size) :
+        for i in range(0, self.annotated_methods_size) :
             self.method_annotations.append( MethodAnnotation( buff, cm ) )
 
         self.parameter_annotations = []
-        for i in xrange(0, self.annotated_parameters_size) :
+        for i in range(0, self.annotated_parameters_size) :
             self.parameter_annotations.append( ParameterAnnotation( buff, cm ) )
 
     def get_class_annotations_off(self) :
@@ -1072,7 +1072,7 @@ class TypeList :
         self.size = unpack("=I", buff.read( 4 ) )[0]
 
         self.list = []
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.list.append( TypeItem( buff, cm ) )
 
     def get_pad(self) :
@@ -1228,7 +1228,7 @@ class DebugInfoItem :
         #print "line", self.line_start, "params", self.parameters_size
 
         self.parameter_names = []
-        for i in xrange(0, self.parameters_size) :
+        for i in range(0, self.parameters_size) :
             self.parameter_names.append( readuleb128p1( buff ) )
 
         self.bytecodes = []
@@ -1381,7 +1381,7 @@ class EncodedArray :
         self.size = readuleb128( buff )
 
         self.values = []
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.values.append( EncodedValue(buff, cm) )
 
     def get_size(self) :
@@ -1580,7 +1580,7 @@ class EncodedAnnotation :
         self.size = readuleb128( buff )
 
         self.elements = []
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.elements.append( AnnotationElement( buff, cm ) )
 
     def get_type_idx(self) :
@@ -1913,7 +1913,7 @@ class TypeHIdItem :
         self.offset = buff.get_idx()
 
         self.type = []
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             self.type.append( TypeIdItem( buff, cm ) )
 
     def get_type(self) :
@@ -2066,7 +2066,7 @@ class ProtoHIdItem :
 
         self.proto = []
 
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             self.proto.append( ProtoIdItem(buff, cm) )
 
     def set_off(self, off) :
@@ -2215,7 +2215,7 @@ class FieldHIdItem :
         self.offset = buff.get_idx()
 
         self.elem = []
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             self.elem.append( FieldIdItem(buff, cm) )
 
     def set_off(self, off) :
@@ -2240,7 +2240,7 @@ class FieldHIdItem :
     def show(self) :
         nb = 0
         for i in self.elem :
-            print nb,
+            print(nb, end=' ')
             i.show()
             nb = nb + 1
 
@@ -2371,7 +2371,7 @@ class MethodHIdItem :
         self.offset = buff.get_idx()
 
         self.methods = []
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             self.methods.append( MethodIdItem(buff, cm) )
 
     def set_off(self, off) :
@@ -2391,10 +2391,10 @@ class MethodHIdItem :
             i.reload()
 
     def show(self) :
-        print "METHOD_ID_ITEM"
+        print("METHOD_ID_ITEM")
         nb = 0
         for i in self.methods :
-            print nb,
+            print(nb, end=' ')
             i.show()
             nb = nb + 1
 
@@ -2421,7 +2421,7 @@ class ProtoIdItemInvalid :
         return "(AG:IPI:invalid_return_type)"
 
     def show(self) :
-        print "AG:IPI:invalid_proto_item", self.get_shorty(), self.get_return_type(), self.get_params()
+        print("AG:IPI:invalid_proto_item", self.get_shorty(), self.get_return_type(), self.get_params())
 
 class FieldIdItemInvalid :
     def get_class_name(self) :
@@ -2440,7 +2440,7 @@ class FieldIdItemInvalid :
         return [ self.get_class_name(), self.get_type(), self.get_name() ]
 
     def show(self) :
-        print "AG:IFI:invalid_field_item"
+        print("AG:IFI:invalid_field_item")
 
 class MethodIdItemInvalid :
     def get_class_name(self) :
@@ -2459,7 +2459,7 @@ class MethodIdItemInvalid :
         return [ self.get_class_name(), self.get_name(), self.get_proto() ]
 
     def show(self) :
-        print "AG:IMI:invalid_method_item"
+        print("AG:IMI:invalid_method_item")
 
 class EncodedField :
     """
@@ -2721,7 +2721,7 @@ class EncodedMethod :
         if params:
             bytecode._PrintDefault("- local registers: v%d...v%d\n" % (0, nb - len(params) - 1))
             j = 0
-            for i in xrange(nb - len(params), nb):
+            for i in range(nb - len(params), nb):
                 bytecode._PrintDefault("- v%d:%s\n" % (i, get_type(params[j])))
                 j += 1
         else :
@@ -3043,12 +3043,12 @@ class ClassDataItem :
         if value != None :
             values = value.get_values()
             if len(values) <= len(self.static_fields) :
-                for i in xrange(0, len(values)) :
+                for i in range(0, len(values)) :
                     self.static_fields[i].set_init_value( values[i] )
 
     def _load_elements(self, size, l, Type, buff, cm) :
         prev = 0
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             el = Type(buff, cm)
             el.adjust_idx( prev )
 
@@ -3391,7 +3391,7 @@ class ClassHDefItem :
 
         self.class_def = []
 
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             idx = buff.get_idx()
 
             class_def = ClassDefItem( buff, cm )
@@ -3503,7 +3503,7 @@ class EncodedCatchHandler :
 
         self.handlers = []
 
-        for i in xrange(0, abs(self.size)) :
+        for i in range(0, abs(self.size)) :
             self.handlers.append( EncodedTypeAddrPair(buff) )
 
         if self.size <= 0 :
@@ -3583,7 +3583,7 @@ class EncodedCatchHandlerList :
         self.size = readuleb128( buff )
         self.list = []
 
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.list.append( EncodedCatchHandler(buff, cm) )
 
 
@@ -3740,7 +3740,7 @@ class Instruction(object) :
         """
             Print the instruction
         """    
-        print self.get_name() + " " + self.get_output(idx),
+        print(self.get_name() + " " + self.get_output(idx), end=' ')
 
     def show_buff(self, idx) :
         """
@@ -3880,7 +3880,7 @@ class FillArrayData :
         data = self.get_data()
 
         buff += repr(data) + " | "
-        for i in xrange(0, len(data)) :
+        for i in range(0, len(data)) :
           buff += "\\x%02x" % ord( data[i] )
 
         return buff
@@ -3901,7 +3901,7 @@ class FillArrayData :
         """     
         buff = self.get_name() + " "
 
-        for i in xrange(0, len(self.data)) :
+        for i in range(0, len(self.data)) :
             buff += "\\x%02x" % ord( self.data[i] )
         return buff
 
@@ -3909,7 +3909,7 @@ class FillArrayData :
         """
             Print the instruction
         """   
-        print self.show_buff(pos),
+        print(self.show_buff(pos), end=' ')
 
     def get_length(self) :
         """
@@ -3939,11 +3939,11 @@ class SparseSwitch :
         self.targets = []
 
         idx = self.format_general_size
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.keys.append( unpack('=l', buff[idx:idx+4])[0] )
             idx += 4
 
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             self.targets.append( unpack('=l', buff[idx:idx+4])[0] )
             idx += 4
 
@@ -4014,7 +4014,7 @@ class SparseSwitch :
             :rtype: string
         """   
         buff = self.get_name() + " "
-        for i in xrange(0, len(self.keys)) :
+        for i in range(0, len(self.keys)) :
             buff += "%x:%x " % (self.keys[i], self.targets[i])
 
         return buff
@@ -4023,7 +4023,7 @@ class SparseSwitch :
         """
             Print the instruction
         """ 
-        print self.show_buff( pos ),
+        print(self.show_buff( pos ), end=' ')
 
     def get_length(self) :
         return self.format_general_size + (self.size * calcsize('<L')) * 2
@@ -4054,7 +4054,7 @@ class PackedSwitch :
         if (max_size * 4) > len(buff) :
             max_size = len(buff) - idx - 8
 
-        for i in xrange(0, max_size) :
+        for i in range(0, max_size) :
             self.targets.append( unpack('=l', buff[idx:idx+4])[0] )
             idx += 4
 
@@ -4136,7 +4136,7 @@ class PackedSwitch :
         """
             Print the instruction
         """ 
-        print self.show_buff( pos ),
+        print(self.show_buff( pos ), end=' ')
 
     def get_length(self) :
         return self.format_general_size + (self.size * calcsize('=L'))
@@ -5909,9 +5909,9 @@ class DCode:
         nb = 0
         idx = 0
         for i in self.get_instructions() :
-            print "%-8d(%08x)" % (nb, idx),
+            print("%-8d(%08x)" % (nb, idx), end=' ')
             i.show(nb)
-            print
+            print()
 
             idx += i.get_length()
             nb += 1
@@ -6033,7 +6033,7 @@ class DalvikCode :
         self.tries = []
         self.handlers = None 
         if self.tries_size > 0 :
-            for i in xrange(0, self.tries_size) :
+            for i in range(0, self.tries_size) :
                 self.tries.append( TryItem( buff, self.__CM ) )
 
             self.handlers = EncodedCatchHandlerList( buff, self.__CM )
@@ -6228,7 +6228,7 @@ class CodeItem :
         self.code = []
         self.__code_off = {}
 
-        for i in xrange(0, size) :
+        for i in range(0, size) :
             x = DalvikCode( buff, cm )
             self.code.append( x )
             self.__code_off[ x.get_off() ] = x
@@ -6250,7 +6250,7 @@ class CodeItem :
             i.reload()
 
     def show(self) :
-        print "CODE_ITEM"
+        print("CODE_ITEM")
         for i in self.code :
             i.show()
 
@@ -6304,7 +6304,7 @@ class MapItem :
         debug("%s @ 0x%x(%d) %d %x" % (TYPE_MAP_ITEM[ self.type ], buff.get_idx(), buff.get_idx(), self.size, self.offset))
 
         if TYPE_MAP_ITEM[ self.type ] == "TYPE_STRING_ID_ITEM" :
-            self.item = [ StringIdItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ StringIdItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_CODE_ITEM" :
             self.item = CodeItem( self.size, buff, cm )
@@ -6328,31 +6328,31 @@ class MapItem :
             self.item = HeaderItem( self.size, buff, cm )
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ANNOTATION_ITEM" :
-            self.item = [ AnnotationItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ AnnotationItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ANNOTATION_SET_ITEM" :
-            self.item = [ AnnotationSetItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ AnnotationSetItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ANNOTATIONS_DIRECTORY_ITEM" :
-            self.item = [ AnnotationsDirectoryItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ AnnotationsDirectoryItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ANNOTATION_SET_REF_LIST" :
-            self.item = [ AnnotationSetRefList( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ AnnotationSetRefList( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_TYPE_LIST" :
-            self.item = [ TypeList( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ TypeList( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_STRING_DATA_ITEM" :
-            self.item = [ StringDataItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ StringDataItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_DEBUG_INFO_ITEM" :
             self.item = DebugInfoItemEmpty( buff, cm )
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ENCODED_ARRAY_ITEM" :
-            self.item = [ EncodedArrayItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ EncodedArrayItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_CLASS_DATA_ITEM" :
-            self.item = [ ClassDataItem(buff, cm) for i in xrange(0, self.size) ]
+            self.item = [ ClassDataItem(buff, cm) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_MAP_LIST" :
             pass # It's me I think !!!
@@ -6362,7 +6362,7 @@ class MapItem :
 
     def next_lazy(self, buff, cm) :
         if TYPE_MAP_ITEM[ self.type ] == "TYPE_STRING_ID_ITEM" :
-            self.item = [ StringIdItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ StringIdItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_CODE_ITEM" :
             self.item = CodeItem( self.size, buff, cm )
@@ -6386,19 +6386,19 @@ class MapItem :
             self.item = HeaderItem( self.size, buff, cm )
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_TYPE_LIST" :
-            self.item = [ TypeList( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ TypeList( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_STRING_DATA_ITEM" :
-            self.item = [ StringDataItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ StringDataItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_DEBUG_INFO_ITEM" :
             self.item = DebugInfoItemEmpty( buff, cm )
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_ENCODED_ARRAY_ITEM" :
-            self.item = [ EncodedArrayItem( buff, cm ) for i in xrange(0, self.size) ]
+            self.item = [ EncodedArrayItem( buff, cm ) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_CLASS_DATA_ITEM" :
-            self.item = [ ClassDataItem(buff, cm) for i in xrange(0, self.size) ]
+            self.item = [ ClassDataItem(buff, cm) for i in range(0, self.size) ]
 
         elif TYPE_MAP_ITEM[ self.type ] == "TYPE_MAP_LIST" :
             pass # It's me I think !!!
@@ -6734,7 +6734,7 @@ class MapList :
         self.size = unpack("=I", buff.read( 4 ) )[0]
 
         self.map_item = []
-        for i in xrange(0, self.size) :
+        for i in range(0, self.size) :
             idx = buff.get_idx()
 
             mi = MapItem( buff, self.CM )
@@ -7568,13 +7568,13 @@ class OdexHeaderItem:
         self.padding = unpack("=I", buff.read(4))[0]
 
     def show(self):
-        print "dex_offset:%x dex_length:%x deps_offset:%x deps_length:%x aux_offset:%x aux_length:%x flags:%x" % (self.dex_offset,
+        print("dex_offset:%x dex_length:%x deps_offset:%x deps_length:%x aux_offset:%x aux_length:%x flags:%x" % (self.dex_offset,
                                                                                                                   self.dex_length,
                                                                                                                   self.deps_offset,
                                                                                                                   self.deps_length,
                                                                                                                   self.aux_offset,
                                                                                                                   self.aux_length,
-                                                                                                                  self.flags)
+                                                                                                                  self.flags))
 
 
 class OdexDependencies:

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # This file is part of Androguard.
 #
 # Copyright (C) 2012, Anthony Desnos <desnos at t0t0.fr>
@@ -127,13 +129,13 @@ def long2int( l ) :
 def long2str(l):
     """Convert an integer to a string."""
     if type(l) not in (types.IntType, types.LongType):
-        raise (ValueError, 'the input must be an integer')
+        raise ValueError('the input must be an integer')
 
     if l < 0:
-        raise ValueError, 'the input must be greater than 0'
+        raise ValueError('the input must be greater than 0')
     s = ''
     while l:
-        s = s + chr(l & 255L)
+        s = s + chr(l & 255)
         l >>= 8
 
     return s
@@ -141,9 +143,9 @@ def long2str(l):
 def str2long(s):
     """Convert a string to a long integer."""
     if type(s) not in (types.StringType, types.UnicodeType):
-        raise ValueError, 'the input must be a string'
+        raise ValueError('the input must be a string')
 
-    l = 0L
+    l = 0
     for i in s:
         l <<= 8
         l |= ord(i)
@@ -162,13 +164,10 @@ def is_android(filename) :
     if not filename:
         return None
 
-    fd = open( filename, "r")
+    fd = open(filename, 'rb')
     val = None
-
     f_bytes = fd.read(7)
-
-    val = is_android_raw( f_bytes )
-
+    val = is_android_raw(f_bytes)
     fd.close()
     return val
 
@@ -176,17 +175,17 @@ def is_android_raw(raw):
     val = None
     f_bytes = raw[:7]
 
-    if f_bytes[0:2] == "PK":
+    if f_bytes[0:2] == b"PK":
         val = "APK"
-    elif f_bytes[0:3] == "dex":
+    elif f_bytes[0:3] == b"dex":
         val = "DEX"
-    elif f_bytes[0:3] == "dey":
+    elif f_bytes[0:3] == b"dey":
         val = "DEY"
-    elif f_bytes[0:7] == "\x7fELF\x01\x01\x01":
+    elif f_bytes[0:7] == b"\x7fELF\x01\x01\x01":
         val = "ELF"
-    elif f_bytes[0:4] == "\x03\x00\x08\x00":
+    elif f_bytes[0:4] == b"\x03\x00\x08\x00":
         val = "AXML"
-    elif f_bytes[0:4] == "\x02\x00\x0C\x00":
+    elif f_bytes[0:4] == b"\x02\x00\x0C\x00":
         val = "ARSC"
 
     return val

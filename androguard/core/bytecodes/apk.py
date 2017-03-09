@@ -148,7 +148,7 @@ class APK:
           APK("myfile.apk")
           APK(open("myfile.apk", "rb").read(), raw=True)
     """
-    def __init__(self, filename, raw=False, mode="r", magic_file=None, zipmodule=ZIPMODULE):
+    def __init__(self, filename, raw=False, mode="rb", magic_file=None, zipmodule=ZIPMODULE):
         self.filename = filename
 
         self.xml = {}
@@ -177,7 +177,7 @@ class APK:
         if zipmodule == 0:
             self.zip = ChilkatZip(self.__raw)
         elif zipmodule == 2:
-            from androguard.patch import zipfile
+            from agst3.androguard.patch import zipfile
             self.zip = zipfile.ZipFile(io.StringIO(self.__raw), mode=mode)
         else:
             import zipfile
@@ -555,7 +555,7 @@ class APK:
             :type new_files: a dictionnary (key:filename, value:content of the file)
         """
         if self.zipmodule == 2:
-            from androguard.patch import zipfile
+            from agst3.androguard.patch import zipfile
             zout = zipfile.ZipFile(filename, 'w')
         else:
             import zipfile

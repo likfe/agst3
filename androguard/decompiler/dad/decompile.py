@@ -20,17 +20,17 @@ import sys
 sys.path.append('./')
 
 import logging
-import androguard.core.androconf as androconf
-import androguard.decompiler.dad.util as util
-from androguard.core.analysis import analysis
-from androguard.core.bytecodes import apk, dvm
-from androguard.decompiler.dad.control_flow import identify_structures
-from androguard.decompiler.dad.dataflow import (build_def_use,
+import agst3.androguard.core.androconf as androconf
+import agst3.androguard.decompiler.dad.util as util
+from agst3.androguard.core.analysis import analysis
+from agst3.androguard.core.bytecodes import apk, dvm
+from agst3.androguard.decompiler.dad.control_flow import identify_structures
+from agst3.androguard.decompiler.dad.dataflow import (build_def_use,
                                                 dead_code_elimination,
                                                 register_propagation)
-from androguard.decompiler.dad.graph import construct
-from androguard.decompiler.dad.instruction import Param, ThisParam
-from androguard.decompiler.dad.writer import Writer
+from agst3.androguard.decompiler.dad.graph import construct
+from agst3.androguard.decompiler.dad.instruction import Param, ThisParam
+from agst3.androguard.decompiler.dad.writer import Writer
 
 
 def auto_vm(filename):
@@ -80,7 +80,7 @@ class DvMethod():
                 self.var_to_name.setdefault(param, Param(param, ptype))
                 num_param += util.get_type_size(ptype)
         if 0:
-            from androguard.core import bytecode
+            from agst3.androguard.core import bytecode
             bytecode.method2png('/tmp/dad/graphs/%s#%s.png' % \
                 (self.cls_name.split('/')[-1][:-1], self.name), methanalysis)
 
@@ -125,7 +125,7 @@ class DvMethod():
 
     def show_source(self):
         if self.writer:
-            print self.writer
+            print(self.writer)
 
     def get_source(self):
         if self.writer:
@@ -165,7 +165,7 @@ class DvClass():
 
         logger.info('Class : %s', self.name)
         logger.info('Methods added :')
-        for index, meth in self.methods.iteritems():
+        for index, meth in self.methods.items():
             logger.info('%s (%s, %s)', index, self.name, meth.name)
         logger.info('')
 
@@ -191,7 +191,7 @@ class DvClass():
             logger.error('Method %s not found.', num)
 
     def process(self):
-        for klass in self.subclasses.values():
+        for klass in list(self.subclasses.values()):
             klass.process()
         for meth in self.methods:
             self.process_method(meth)
@@ -213,17 +213,17 @@ class DvClass():
                         [n[1:-1].replace('/', '.') for n in interfaces])
 
         source.append('%s {\n' % self.prototype)
-        for field in self.fields.values():
+        for field in list(self.fields.values()):
             access = [util.ACCESS_FLAGS_FIELDS.get(flag) for flag in
                 util.ACCESS_FLAGS_FIELDS if flag & field.get_access_flags()]
             f_type = util.get_type(field.get_descriptor())
             name = field.get_name()
             source.append('    %s %s %s;\n' % (' '.join(access), f_type, name))
 
-        for klass in self.subclasses.values():
+        for klass in list(self.subclasses.values()):
             source.append(klass.get_source())
 
-        for _, method in self.methods.iteritems():
+        for _, method in self.methods.items():
             if isinstance(method, DvMethod):
                 source.append(method.get_source())
         source.append('}\n')
@@ -231,7 +231,7 @@ class DvClass():
 
     def show_source(self):
         if not self.inner and self.package:
-            print 'package %s;\n' % self.package
+            print('package %s;\n' % self.package)
 
         if self.superclass is not None:
             self.superclass = self.superclass[1:-1].replace('/', '.')
@@ -244,21 +244,21 @@ class DvClass():
             self.prototype += ' implements %s' % ', '.join(
                         [n[1:-1].replace('/', '.') for n in interfaces])
 
-        print '%s {\n' % self.prototype
-        for field in self.fields.values():
+        print('%s {\n' % self.prototype)
+        for field in list(self.fields.values()):
             access = [util.ACCESS_FLAGS_FIELDS.get(flag) for flag in
                 util.ACCESS_FLAGS_FIELDS if flag & field.get_access_flags()]
             f_type = util.get_type(field.get_descriptor())
             name = field.get_name()
-            print '    %s %s %s;\n' % (' '.join(access), f_type, name)
+            print('    %s %s %s;\n' % (' '.join(access), f_type, name))
 
-        for klass in self.subclasses.values():
+        for klass in list(self.subclasses.values()):
             klass.show_source()
 
-        for _, method in self.methods.iteritems():
+        for _, method in self.methods.items():
             if isinstance(method, DvMethod):
                 method.show_source()
-        print '}\n'
+        print('}\n')
 
     def __repr__(self):
         if not self.subclasses:
@@ -275,10 +275,10 @@ class DvMachine():
         #util.merge_inner(self.classes)
 
     def get_classes(self):
-        return self.classes.keys()
+        return list(self.classes.keys())
 
     def get_class(self, class_name):
-        for name, klass in self.classes.iteritems():
+        for name, klass in self.classes.items():
             if class_name in name:
                 if isinstance(klass, DvClass):
                     return klass
@@ -286,7 +286,7 @@ class DvMachine():
                 return dvclass
 
     def process(self):
-        for name, klass in self.classes.iteritems():
+        for name, klass in self.classes.items():
             logger.info('Processing class: %s', name)
             if isinstance(klass, DvClass):
                 klass.process()
@@ -295,11 +295,11 @@ class DvMachine():
                 dvclass.process()
 
     def show_source(self):
-        for klass in self.classes.values():
+        for klass in list(self.classes.values()):
             klass.show_source()
 
     def process_and_show(self):
-        for name, klass in self.classes.iteritems():
+        for name, klass in self.classes.items():
             logger.info('Processing class: %s', name)
             if not isinstance(klass, DvClass):
                 klass = DvClass(klass, self.vma)
@@ -329,7 +329,7 @@ def main():
         logger.info(' %s', class_name)
     logger.info('========================')
 
-    cls_name = raw_input('Choose a class: ')
+    cls_name = input('Choose a class: ')
     if cls_name == '*':
         machine.process_and_show()
     else:
@@ -338,10 +338,10 @@ def main():
             logger.error('%s not found.', cls_name)
         else:
             logger.info('======================')
-            for method_id, method in cls.get_methods().items():
+            for method_id, method in list(cls.get_methods().items()):
                 logger.info('%d: %s', method_id, method.name)
             logger.info('======================')
-            meth = raw_input('Method: ')
+            meth = input('Method: ')
             if meth == '*':
                 logger.info('CLASS = %s', cls)
                 cls.process()

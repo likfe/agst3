@@ -18,8 +18,8 @@
 
 import logging
 from struct import pack, unpack
-import androguard.decompiler.dad.util as util
-from androguard.decompiler.dad.instruction import (ArrayLengthExpression,
+import agst3.androguard.decompiler.dad.util as util
+from agst3.androguard.decompiler.dad.instruction import (ArrayLengthExpression,
                             ArrayLoadExpression, ArrayStoreInstruction,
                             AssignExpression, BaseClass, BinaryCompExpression,
                             BinaryExpression, BinaryExpression2Addr,
@@ -1010,7 +1010,7 @@ def invokevirtualrange(ins, vmap, ret):
     param_type, ret_type = method.get_proto()
     ret_type = util.get_type(ret_type)
     param_type = util.get_params_type(param_type)
-    largs = range(ins.CCCC, ins.NNNN + 1)
+    largs = list(range(ins.CCCC, ins.NNNN + 1))
     args = get_variables(vmap, *largs)
     if len(largs) == 1:
         args = [args]
@@ -1028,7 +1028,7 @@ def invokesuperrange(ins, vmap, ret):
     param_type, ret_type = method.get_proto()
     ret_type = util.get_type(ret_type)
     param_type = util.get_params_type(param_type)
-    largs = range(ins.CCCC, ins.NNNN + 1)
+    largs = list(range(ins.CCCC, ins.NNNN + 1))
     args = get_variables(vmap, *largs)
     if len(largs) == 1:
         args = [args]
@@ -1046,7 +1046,7 @@ def invokedirectrange(ins, vmap, ret):
     param_type, ret_type = method.get_proto()
     ret_type = util.get_type(ret_type)
     param_type = util.get_params_type(param_type)
-    largs = range(ins.CCCC, ins.NNNN + 1)
+    largs = list(range(ins.CCCC, ins.NNNN + 1))
     args = get_variables(vmap, *largs)
     if len(largs) == 1:
         args = [args]
@@ -1066,7 +1066,7 @@ def invokestaticrange(ins, vmap, ret):
     param_type, ret_type = method.get_proto()
     ret_type = util.get_type(ret_type)
     param_type = util.get_params_type(param_type)
-    largs = range(ins.CCCC, ins.NNNN + 1)
+    largs = list(range(ins.CCCC, ins.NNNN + 1))
     args = get_variables(vmap, *largs)
     if len(largs) == 1:
         args = [args]
@@ -1085,7 +1085,7 @@ def invokeinterfacerange(ins, vmap, ret):
     param_type, ret_type = method.get_proto()
     ret_type = util.get_type(ret_type)
     param_type = util.get_params_type(param_type)
-    largs = range(ins.CCCC, ins.NNNN + 1)
+    largs = list(range(ins.CCCC, ins.NNNN + 1))
     args = get_variables(vmap, *largs)
     if len(largs) == 1:
         args = [args]

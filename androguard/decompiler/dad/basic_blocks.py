@@ -17,9 +17,9 @@
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from androguard.decompiler.dad.opcode_ins import INSTRUCTION_SET
-from androguard.decompiler.dad.instruction import Variable
-from androguard.decompiler.dad.node import Node
+from agst3.androguard.decompiler.dad.opcode_ins import INSTRUCTION_SET
+from agst3.androguard.decompiler.dad.instruction import Variable
+from agst3.androguard.decompiler.dad.node import Node
 
 
 logger = logging.getLogger('dad.basic_blocks')
@@ -37,7 +37,7 @@ class BasicBlock(Node):
 
     def get_loc_with_ins(self):
         if self.loc_ins is None:
-            self.loc_ins = zip(range(*self.ins_range), self.ins)
+            self.loc_ins = list(zip(list(range(*self.ins_range)), self.ins))
         return self.loc_ins
 
     def remove_ins(self, loc, ins):
@@ -111,7 +111,7 @@ class SwitchBlock(BasicBlock):
     def update_attribute_with(self, n_map):
         super(SwitchBlock, self).update_attribute_with(n_map)
         self.cases = [n_map.get(n, n) for n in self.cases]
-        for node1, node2 in n_map.iteritems():
+        for node1, node2 in n_map.items():
             if node1 in self.node_to_case:
                 self.node_to_case[node2] = self.node_to_case.pop(node1)
 

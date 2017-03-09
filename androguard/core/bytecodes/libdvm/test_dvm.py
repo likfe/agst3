@@ -48,12 +48,12 @@ if __name__ == "__main__" :
     x = analysis.VMAnalysis( d ) 
 
     t3 = time.time()
-    print '-> %0.8f %0.8f %0.8f' % ((t2-t1, t3-t2, t3-t1))
+    print('-> %0.8f %0.8f %0.8f' % ((t2-t1, t3-t2, t3-t1)))
 
     sys.exit(0)
 
     for method in d.get_methods() :
-        print method.get_class_name(), method.get_name(), method.get_descriptor()
+        print(method.get_class_name(), method.get_name(), method.get_descriptor())
 
         code = method.get_code()
         if code == None :
@@ -63,7 +63,7 @@ if __name__ == "__main__" :
     
         idx = 0
         for i in bc.get() :
-            print "\t", "%x" % idx, i.get_op_value(), i.get_name(), i.get_operands()#, i.get_formatted_operands()
+            print("\t", "%x" % idx, i.get_op_value(), i.get_name(), i.get_operands())#, i.get_formatted_operands()
             idx += i.get_length()
 
     sys.exit(0)

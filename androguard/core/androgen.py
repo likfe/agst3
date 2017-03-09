@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
-from androguard.core import androconf
-from androguard.core.bytecodes import jvm
-from androguard.core.bytecodes import dvm
-from androguard.core.bytecodes import apk
-from androguard.core.analysis import analysis
-from androguard.core.analysis import ganalysis
+from agst3.androguard.core import androconf
+from agst3.androguard.core.bytecodes import jvm
+from agst3.androguard.core.bytecodes import dvm
+from agst3.androguard.core.bytecodes import apk
+from agst3.androguard.core.analysis import analysis
+from agst3.androguard.core.analysis import ganalysis
 
 class BC :
     def __init__(self, bc) :
@@ -117,7 +117,7 @@ class Androguard:
             elif ret_type == "DEY" :
                 bc = dvm.DalvikOdexVMFormat( open(i, "rb").read() )
             elif ret_type == "ELF" :
-                from androguard.core.binaries import elf
+                from agst3.androguard.core.binaries import elf
                 bc = elf.ELF( open(i, "rb").read() )
             else :
                 raise( "Unknown format" )

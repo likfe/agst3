@@ -17,15 +17,15 @@
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import Queue
+import queue
 import threading
 import time
 import zlib
 
-from androguard.core import androconf
-from androguard.core.bytecodes import apk, dvm
-from androguard.core.analysis import analysis
-from androguard.core.androconf import debug
+from agst3.androguard.core import androconf
+from agst3.androguard.core.bytecodes import apk, dvm
+from agst3.androguard.core.analysis import analysis
+from agst3.androguard.core.androconf import debug
 
 
 class AndroAuto(object):
@@ -104,14 +104,14 @@ class AndroAuto(object):
             myandro.analysis_app(log, a, d, dx)
 
           myandro.finish(log)
-        except Exception, why:
+        except Exception as why:
           myandro.crash(log, why)
           myandro.finish(log)
 
         del a, d, dx, axmlobj, arscobj
         q.task_done()
 
-    q = Queue.Queue(self.settings["max_fetcher"])
+    q = queue.Queue(self.settings["max_fetcher"])
     for i in range(self.settings["max_fetcher"]):
       t = threading.Thread(target=worker, args=[i, q])
       t.daemon = True

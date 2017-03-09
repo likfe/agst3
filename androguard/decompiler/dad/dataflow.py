@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Androguard.  If not, see <http://www.gnu.org/licenses/>.
 
-from androguard.decompiler.dad.util import build_path
+from agst3.androguard.decompiler.dad.util import build_path
+from functools import reduce
 
 
 def dominance_frontier(graph, immdoms):
@@ -70,7 +71,7 @@ class BasicReachDef(object):
                 if kill is not None:
                     self.defs[node].setdefault(kill, set()).add(i)
                     self.def_to_loc.setdefault(kill, set()).add(i)
-            for defs, values in self.defs[node].items():
+            for defs, values in list(self.defs[node].items()):
                 self.DB[node].add(max(values))
 
     def run(self):
@@ -167,7 +168,7 @@ def dead_code_elimination(graph, du, ud):
 
 
 def clear_path_node(graph, reg, loc1, loc2):
-    for loc in xrange(loc1, loc2):
+    for loc in range(loc1, loc2):
         ins = graph.get_ins_from_loc(loc)
         if ins is None:
             continue
@@ -369,7 +370,7 @@ def build_def_use(graph, lparams):
                                                             analysis.R[node])
                     UD.setdefault((var, i), []).extend(intersect)
     DU = {}
-    for var_loc, defs_loc in UD.items():
+    for var_loc, defs_loc in list(UD.items()):
         var, loc = var_loc
         for def_loc in defs_loc:
             DU.setdefault((var, def_loc), []).append(loc)
